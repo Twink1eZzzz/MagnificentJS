@@ -1,0 +1,6 @@
+{
+  "getFollowers.js": "sha256:abc123def456",
+  "getFollowings.js": "sha256:ghi789jkl012",
+  "fetchPosts.js": "sha256:mno345pqr678",
+  "getStory.js": "sha256:stu901vwx234"
+}
