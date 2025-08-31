@@ -1,43 +1,55 @@
-name: Update Script Hashes
+name: Update Encrypted Script Hashes
 
 on:
   push:
     branches:
       - main
     paths:
-      - "*.js"
+      - "JS_Compress/*"
 
 jobs:
   update-hashes:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Install SwiftHash
+      - name: Generate SHA-256 for encrypted files
         run: |
-          sudo gem install swift_hash
-
-      - name: Generate SHA-256
-        run: |
-          for file in *.js; do
-            swift_hash -a sha256 "$file" >> "$file.hash"
+          cd JS_Compress
+          echo '{' > ../versions.json
+          
+          # 为每个加密文件生成哈希值
+          for file in *; do
+            if [ -f "$file" ]; then
+              hash=$(sha256sum "$file" | cut -d' ' -f1)
+              echo "  \"$file\": \"sha256:$hash\"," >> ../versions.json
+            fi
           done
+          
+          # 移除最后一行的逗号
+          sed -i '$ s/,$//' ../versions.json
+          echo '}' >> ../versions.json
 
-      - name: Update versions.json
+      - name: Format versions.json
         run: |
-          echo '{' > versions.json
-          for file in *.js; do
-            hash=$(cat "$file.hash")
-            echo "  \"$file\": \"$hash\"," >> versions.json
-          done
-          sed -i '$ s/,$//' versions.json
-          echo '}' >> versions.json
+          # 使用 jq 格式化 JSON（如果可用）
+          if command -v jq &> /dev/null; then
+            jq . versions.json > versions_formatted.json
+            mv versions_formatted.json versions.json
+          fi
+
+      - name: Display generated versions.json
+        run: cat versions.json
 
       - name: Commit and Push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add versions.json
-          git commit -m "Update versions.json"
-          git push
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update encrypted script hashes"
+            git push
+          fi
