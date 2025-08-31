@@ -1,0 +1,28 @@
+# 原始文件名 -> 目标文件名
+# 创建时间: Sun Aug 31 22:05:30 CST 2025
+# 项目: big
+# 输入目录: /Users/mac/Gpower/ins-web-api-js/TestInsWeb/JS_ORG
+# 输出目录: /Users/mac/Gpower/ins-web-api-js/TestInsWeb/JS_Compress
+# 加密方式: aes
+
+common.js -> lib_core
+fetchInch.js -> net_sync
+reels_media_connection.js -> media_conn
+getComments.js -> text_req
+getStory.js -> story_req
+getFollowers.js -> list_get
+getLikers.js -> like_get
+fetchPosts.js -> data_load
+MediaInfo.js -> media_info
+getUserFormData.js -> form_data
+web_profile_info.js -> profile_web
+searchs.js -> find_api
+rees_tray.js -> tray_ui
+getFollowings.js -> conn_list
+updateCookie.js -> cookie_set
+unfollowUser_new.js -> user_drop
+ayml.js -> ayml
+followUser.js -> user_link
+inbox.js -> msg_box
+
+["lib_core", "net_sync", "media_conn", "text_req", "story_req", "list_get", "like_get", "data_load", "media_info", "form_data", "profile_web", "find_api", "tray_ui", "conn_list", "cookie_set", "user_drop", "ayml", "user_link", "msg_box"]
