@@ -1,0 +1,43 @@
+name: Update Script Hashes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "*.js"
+
+jobs:
+  update-hashes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install SwiftHash
+        run: |
+          sudo gem install swift_hash
+
+      - name: Generate SHA-256
+        run: |
+          for file in *.js; do
+            swift_hash -a sha256 "$file" >> "$file.hash"
+          done
+
+      - name: Update versions.json
+        run: |
+          echo '{' > versions.json
+          for file in *.js; do
+            hash=$(cat "$file.hash")
+            echo "  \"$file\": \"$hash\"," >> versions.json
+          done
+          sed -i '$ s/,$//' versions.json
+          echo '}' >> versions.json
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add versions.json
+          git commit -m "Update versions.json"
+          git push
