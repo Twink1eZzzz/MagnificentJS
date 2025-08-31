@@ -44,8 +44,8 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "545002666@qq.com"
+          git config --local user.name ""
           git add versions.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
